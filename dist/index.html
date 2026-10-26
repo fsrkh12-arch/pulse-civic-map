@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a1821" />
+    <title>PULSE — Your city, in real time</title>
+    <meta name="description" content="A real-time civic reporting map for city life." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQqQ0F2W6EQazclV30nT5J9R8fA+4nM=" crossorigin="" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="map.css" />
+    <link rel="stylesheet" href="location.css" />
+    <link rel="stylesheet" href="insights.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="rail">
+        <a class="brand" href="#top" aria-label="PULSE home"><span class="brand-mark">P</span><span>PULSE</span></a>
+        <nav aria-label="Primary navigation">
+          <button class="nav-item active" data-view="map"><span>⌖</span> Live map</button>
+          <button class="nav-item" data-view="feed"><span>◫</span> City feed</button>
+          <button class="nav-item" data-view="insights"><span>◌</span> Insights</button>
+        </nav>
+        <div class="rail-bottom">
+          <button class="quiet-button" id="aboutButton">About PULSE <span>↗</span></button>
+          <div class="city-status"><span class="status-dot"></span><div><b>BAKU</b><small>City pulse is live</small></div></div>
+        </div>
+      </aside>
+
+      <main id="top">
+        <header class="topbar">
+          <button class="mobile-logo" aria-label="Open menu">PULSE</button>
+          <div class="location"><span class="pin">●</span><span>Central Baku</span><button aria-label="Change location">⌄</button></div>
+          <div class="top-actions"><button class="icon-button" aria-label="Notifications">⌁<i></i></button><button class="profile" id="openProfile">FS</button></div>
+        </header>
+
+        <section class="map-view view active" id="mapView">
+          <div class="map-toolbar">
+            <div><p class="eyebrow">LIVE CITY SIGNAL</p><h1>What’s happening <em>around you?</em></h1></div>
+            <button class="report-button" id="openReport"><span>＋</span> Report something</button>
+          </div>
+          <div class="map-controls">
+            <label class="search"><span>⌕</span><input id="searchInput" placeholder="Search a place or issue" /></label>
+            <div class="filters" role="group" aria-label="Report categories">
+              <button class="filter selected" data-filter="all">All <b id="allCount">24</b></button>
+              <button class="filter" data-filter="hazard">Hazards</button>
+              <button class="filter" data-filter="infrastructure">Infrastructure</button>
+              <button class="filter" data-filter="event">Events</button>
+              <button class="filter" data-filter="crowd">Crowds</button>
+            </div>
+          </div>
+
+          <div class="map-stage real-map-stage" aria-label="Interactive Baku map">
+            <div class="map-fallback" id="mapFallback" aria-hidden="true">
+              <svg viewBox="0 0 1000 600" preserveAspectRatio="none" role="presentation">
+                <rect width="1000" height="600" fill="#e7ede3"/><path d="M715 0H1000V600H816C836 535 810 475 838 409C875 319 818 247 850 180C878 118 844 58 865 0Z" fill="#a7dadd"/>
+                <path d="M0 124C140 113 247 144 371 122S594 108 714 150" class="major"/><path d="M26 272C151 238 284 275 395 243S594 246 809 217" class="major"/><path d="M0 420C159 402 235 431 370 390S631 391 841 355" class="major"/><path d="M137 0C153 132 112 216 142 327S175 485 144 600M355 0C330 126 370 202 352 306S320 475 358 600M572 0C608 145 555 217 593 332S568 489 607 600M731 0C697 126 741 260 706 351S737 477 701 600" class="major"/>
+                <path d="M70 68L631 550M10 352L736 62M236 0L650 601M0 522L775 145M90 600L627 0M0 171L696 524" class="minor"/>
+                <text x="95" y="115">YASAMAL</text><text x="392" y="155">NASIMI</text><text x="540" y="340">SABAIL</text><text x="738" y="225">PORT BAKU</text><text x="621" y="520">BAKU BOULEVARD</text><text x="425" y="360" class="place">Fountains Square</text><text x="525" y="235" class="place">28 May</text><text x="275" y="443" class="place">Winter Park</text>
+              </svg><div id="fallbackMarkers"></div>
+            </div>
+            <div id="map" aria-label="Map of central Baku"></div>
+            <aside class="map-panel" id="mapPanel">
+              <div class="panel-top"><span class="signal-pill"><i></i> LIVE SIGNAL</span><button id="closePanel" aria-label="Close details">×</button></div>
+              <p class="panel-category" id="panelCategory">SAFETY · HIGH ATTENTION</p><h3 id="panelTitle">Pothole near pedestrian crossing</h3>
+              <p class="panel-location" id="panelLocation">Neftchilar Avenue · 2 min walk</p><p class="panel-description" id="panelDescription">Deep pothole in the right lane near the crossing.</p>
+              <div class="panel-proof"><div class="avatars"><span>AR</span><span>NM</span><span>+</span></div><p><b id="panelConfirmations">18</b> neighbors confirmed<br><small>Last update 12 min ago</small></p></div>
+              <button class="panel-action" id="confirmReport">Confirm this report <span>＋</span></button><button class="panel-link" id="viewFeed">View in city feed →</button>
+            </aside>
+            <div class="map-legend"><span><i class="legend hazard"></i>Safety</span><span><i class="legend infrastructure"></i>Infrastructure</span><span><i class="legend event"></i>Community</span></div><div class="map-notice">Demo map · reports are illustrative</div>
+          </div>
+          <div class="map-footer"><span><i class="live-dot"></i> Updated just now</span><span><b id="activeReports">24</b> active reports · <button id="openMunicipal">Municipal view preview →</button></span></div>
+        </section>
+
+        <section class="feed-view view" id="feedView">
+          <div class="page-intro"><p class="eyebrow">CITY FEED</p><h1>Signals from the <em>street.</em></h1><p>Updates are organized by proximity, recency, and community confirmation.</p></div>
+          <div id="feedList" class="feed-list"></div>
+        </section>
+
+        <section class="insights-view view" id="insightsView">
+          <div class="page-intro"><p class="eyebrow">WEEKLY PULSE</p><h1>A city that can <em>listen.</em></h1><p>Early patterns from community reports. These are citizen signals—not official city notices.</p></div>
+          <div class="metrics"><article><span>24</span><small>active signals</small><b>↑ 12% this week</b></article><article><span>81%</span><small>community-confirmed</small><b>↑ 8% this week</b></article><article><span>7</span><small>issues clustered by AI</small><b>Less duplicate noise</b></article></div>
+          <div class="insight-card"><div><p class="eyebrow">EMERGING PATTERN</p><h2>Road safety reports are clustering near the boulevard after 18:00.</h2><p>6 reports in the last 72 hours · Review source reports before taking action.</p></div><div class="spark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <section class="response-hub"><div class="response-heading"><div><p class="eyebrow">RESPONSE ROUTING</p><h2>Who should be contacted?</h2><p>Suggested recipients based on the type of report. PULSE does not dispatch emergency services.</p></div><span class="routing-note">ROUTING GUIDE</span></div><div class="routing-grid"><article><i class="route-icon safety">!</i><div><b>Immediate danger or emergency</b><span>Emergency services — 112</span><small>For threats to life, injury, fire, or urgent danger.</small></div><button class="route-button">Emergency guidance</button></article><article><i class="route-icon roads">↗</i><div><b>Road hazard or traffic signal</b><span>City road and transport department</span><small>Potholes, crossings, damaged signs, and road obstructions.</small></div><button class="route-button">Create civic case</button></article><article><i class="route-icon utility">⌁</i><div><b>Water, lighting, or public works</b><span>Municipal utilities and maintenance</span><small>Leaks, streetlights, bins, benches, and damaged public assets.</small></div><button class="route-button">Create civic case</button></article><article><i class="route-icon community">✦</i><div><b>Events and crowd conditions</b><span>City events / public-safety liaison</span><small>For coordination signals; not an emergency dispatch channel.</small></div><button class="route-button">Share update</button></article></div></section>
+        </section>
+      </main>
+    </div>
+
+    <div class="report-drawer" id="reportDrawer" aria-hidden="true">
+      <div class="drawer-backdrop" data-close></div>
+      <section class="drawer" role="dialog" aria-modal="true" aria-labelledby="reportTitle">
+        <div class="drawer-header"><div><p class="eyebrow">NEW CITY SIGNAL</p><h2 id="reportTitle">Make a report</h2></div><button class="close" data-close aria-label="Close">×</button></div>
+        <p class="drawer-copy">Share what you see. Reports are community signals, not emergency dispatch.</p>
+        <form id="reportForm">
+          <label>What’s happening?<select id="reportCategory" required><option value="hazard">Road hazard or safety concern</option><option value="infrastructure">Broken infrastructure</option><option value="event">Local event or activity</option><option value="crowd">Crowd condition</option><option value="emergency">Urgent concern</option></select></label>
+          <label>Where?<input id="reportLocation" required placeholder="e.g. Near Fountains Square" /></label>
+          <div class="location-picker" id="locationPicker"><div><span class="location-icon">⌖</span><p><b id="locationStatus">No map location selected</b><small>Choose an exact pin or use your current location.</small></p></div><div class="location-actions"><button type="button" id="useMyLocation">Use my location</button><button type="button" id="pickOnMap">Drop a pin on map</button></div></div>
+          <label>Brief description<textarea id="reportDescription" required maxlength="180" placeholder="What would help neighbors understand the situation?"></textarea></label>
+          <label class="check"><input type="checkbox" required /> <span>I understand this is a public community report and is not a substitute for emergency services.</span></label>
+          <button class="submit-report" type="submit">Share report <span>→</span></button>
+        </form>
+      </section>
+    </div>
+
+    <div class="modal" id="municipalModal" aria-hidden="true"><div class="modal-backdrop" data-close-modal></div><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="municipalTitle"><button class="close modal-close" data-close-modal>×</button><span class="future-label">FUTURE DIRECTION</span><h2 id="municipalTitle">Municipal dashboard</h2><p>PULSE is currently a citizen-facing MVP. There is no government or municipal partnership in place.</p><p>In the future, authorized city teams could use aggregated, privacy-aware signals to understand trends, prioritize issues, and share verified updates with residents.</p><div class="modal-points"><span>Trend monitoring</span><span>Issue triage</span><span>Resolution updates</span></div></section></div>
+    <div class="modal" id="profileModal" aria-hidden="true"><div class="modal-backdrop" data-close-profile></div><section class="modal-card profile-card" role="dialog" aria-modal="true" aria-labelledby="profileTitle"><button class="close modal-close" data-close-profile>×</button><span class="future-label">PROFILE SETTINGS</span><h2 id="profileTitle">Your civic profile</h2><p>Basic profile details are saved only in this browser for this prototype.</p><form id="profileForm"><div class="profile-fields"><label>First name<input id="firstName" placeholder="First name" /></label><label>Last name<input id="lastName" placeholder="Last name" /></label></div><div class="verification-card"><div><b>SIMA identity verification</b><small>Coming later</small></div><p>Government FIN codes are not collected or stored until a secure, authorized SIMA integration is available.</p><button type="button" disabled>Verification unavailable</button></div><button class="submit-report" type="submit">Save profile <span>→</span></button></form></section></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="app.js"></script>
+  </body>
+</html>

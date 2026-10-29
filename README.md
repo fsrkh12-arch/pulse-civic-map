@@ -15,3 +15,5 @@ A potential future integration is [SİMA](https://sima.az/?lang=en), an Azerbaij
 Explore an interactive map, search and filter illustrative reports, add a report, and try the location and community confirmation features.
 
 PULSE is an early prototype: reports and confirmations reset when the page reloads and are not shared with other users. The AI, agency routing, and SİMA integration are future plans. PULSE is not currently affiliated or integrated with a government agency and does not contact emergency services.
+
+**Technologies:** HTML, CSS, JavaScript, and Leaflet.

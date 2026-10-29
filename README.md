@@ -6,7 +6,7 @@ The long-term idea is to use AI to categorize reports, assess urgency and the nu
 
 ## Open the prototype
 
-[Open the hosted PULSE prototype](https://pulse-civic-map.regalskink6.chatgpt.site/). The site currently requires an authorized ChatGPT sign-in; the repository and site are not publicly accessible to all reviewers.
+[Open the PULSE prototype on GitHub Pages](https://fsrkh12-arch.github.io/pulse-civic-map/).
 
 ## Prototype status
 

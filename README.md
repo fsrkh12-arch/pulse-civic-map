@@ -4,6 +4,10 @@ PULSE began with a question: how can residents make local concerns visible to pu
 
 The long-term idea is to use AI to categorize reports, assess urgency and the number of people reporting an issue, and help route relevant details to the appropriate public agency. We are currently pitching the concept to government stakeholders. These capabilities are proposed, not implemented in the current prototype; prioritization would need careful validation and human oversight.
 
+## Open the prototype
+
+[Open the hosted PULSE prototype](https://pulse-civic-map.regalskink6.chatgpt.site/). The site currently requires an authorized ChatGPT sign-in; the repository and site are not publicly accessible to all reviewers.
+
 ## Prototype status
 
 The map starts with illustrative reports. Visitors can filter and search, select reports, add a report, and try a location pin or device-location option. New reports and confirmations exist only in the current page session and reset on reload; they are not shared with other users. Profile names are stored locally in the current browser. The insights and routing views are demonstrations, not live municipal data or dispatch tools.
